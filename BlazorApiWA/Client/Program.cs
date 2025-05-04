@@ -10,7 +10,10 @@ var levelSwitch = new LoggingLevelSwitch();
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.ControlledBy(levelSwitch)
     .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
+    .WriteTo.BrowserHttp(endpointUrl: $"{builder.HostEnvironment.BaseAddress}ingest")
+#if DEBUG
     .WriteTo.BrowserConsole()
+#endif
     .CreateLogger();
 
 builder.RootComponents.Add<App>("#app");
