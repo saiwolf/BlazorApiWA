@@ -1,5 +1,6 @@
 ﻿@page "/fetch-data"
 @inject HttpClient HttpClient
+@inject ILogger<FetchData> Logger
 
 <PageTitle>Fetch Data Example</PageTitle>
 
@@ -37,18 +38,19 @@ else
 }
 
 @code {
-	WeatherForecast[]? forecasts;
+    WeatherForecast[]? forecasts;
 
-	protected override async Task OnInitializedAsync()
-	{
-		if (forecasts is null)
-		{
-			await GetData();
-		}
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        if (forecasts is null)
+        {
+            await GetData();
+        }
+    }
 
-	async Task GetData()
-	{
-		forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("/api/weather-forecast");
+    async Task GetData()
+    {
+        Logger.LogInformation("Fetching Data, please wait...");
+        forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("/api/weather-forecast");
 	}
 }
