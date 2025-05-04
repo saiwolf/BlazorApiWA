@@ -1,13 +1,12 @@
 using BlazorApiWA.Shared;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.ResponseCompression;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
 
 try
 {
-    var builder = WebApplication.CreateBuilder(args);
+    WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
     IServiceCollection services = builder.Services;
 
     builder.Host.UseSerilog((ctx, lc) => lc
@@ -15,7 +14,7 @@ try
 
     services.AddControllers();
 
-    var app = builder.Build();
+    WebApplication app = builder.Build();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
