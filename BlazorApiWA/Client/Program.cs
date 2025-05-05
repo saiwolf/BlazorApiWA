@@ -7,14 +7,19 @@ using Serilog.Core;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 var levelSwitch = new LoggingLevelSwitch();
-Log.Logger = new LoggerConfiguration()
+var loggerConf = new LoggerConfiguration()
     .MinimumLevel.ControlledBy(levelSwitch)
     .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
-    .WriteTo.BrowserHttp(endpointUrl: $"{builder.HostEnvironment.BaseAddress}ingest")
+    .WriteTo.BrowserHttp(endpointUrl: $"{builder.HostEnvironment.BaseAddress}ingest");
+
 #if DEBUG
-    .WriteTo.BrowserConsole()
+if (builder.HostEnvironment.IsDevelopment())
+{
+    loggerConf.WriteTo.BrowserConsole();
+}
 #endif
-    .CreateLogger();
+
+Log.Logger = loggerConf.CreateLogger();
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
